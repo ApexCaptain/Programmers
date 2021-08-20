@@ -1,150 +1,106 @@
-const areTwoBlocksAdjacent = (front, rear) => {
-    return (front[0] + 1 == rear[0] && front[1] == rear[1])
-    || (front[0] - 1 == rear[0] && front[1] == rear[1])
-    || (front[0] == rear[0] && front[1] + 1 == rear[1])
-    || (front[0] == rear[0] && front[1] - 1 == rear[1])
-}
-
-const minimize = (block, maxLength) => {
-    let minRowValue = maxLength
-    let minColumnValue = maxLength
-    block.forEach(eachBlockPair => {
-        if(minRowValue > eachBlockPair[0]) minRowValue = eachBlockPair[0]
-        if(minColumnValue > eachBlockPair[1]) minColumnValue = eachBlockPair[1]
-    })
-    return block.map(eachBlockPair => [eachBlockPair[0] - minRowValue, eachBlockPair[1] - minColumnValue])
-}
-
-const rotate = (block) => {
-    let maxRowValue = 0
-    let maxColumnValue = 0
-    block.forEach(eachBlockPair => {
-        if(maxRowValue < eachBlockPair[0]) maxRowValue = eachBlockPair[0]
-        if(maxColumnValue < eachBlockPair[1]) maxColumnValue = eachBlockPair[1]
-    })
-    maxRowValue++
-    maxColumnValue++
-    let rotatedBlock = new Array()
-    for(let count = 0 ; count < maxRowValue ; count++)
-        rotatedBlock.push(new Array(maxColumnValue).fill(0))
-    block.forEach(eachBlockPair => {
-        rotatedBlock[eachBlockPair[0]][eachBlockPair[1]] = 1
-    })
-    console.log(rotatedBlock)
-    rotatedBlock = rotatedBlock.map((row, i) => {
-        row.map((val, j) => rotatedBlock[rotatedBlock.length - 1 -j][i])
-    })
-    console.log(rotatedBlock)
-    /*
-    const rotate = matrix => {
-        return matrix.map((row, i) =>
-          row.map((val, j) => matrix[matrix.length - 1 - j][i])
-        );
-      };
-      */
-    /*
-    var grid = [
-  [0,0], [0,1], [0,2], [0,3], [0,4],
-  [1,0], [1,1], [1,2], [1,3], [1,4],
-  [2,0], [2,1], [2,2], [2,3], [2,4],
-  [3,0], [3,1], [3,2], [3,3], [3,4],
-  [4,0], [4,1], [4,2], [4,3], [4,4]
-]; 
-
-var side = Math.sqrt(grid.length);
-
-var rotate = function(d,i){
-   return [Math.abs(i % side - side+1), Math.floor(i/side)]
-}
-grid = grid.map(rotate);
-    */
-
-}
-
-const solution = (game_board, table) => {
-    const blockIndexPairs = table
+const sliceBlock = (table, bitToSlice) => {
+    const blockAddrs = table
         .map((eachRow, rowIndex) => eachRow.map((eachBlock, columnIndex) => {
-                                                if(eachBlock) return [rowIndex, columnIndex]
-                                            })
-                                            .filter(blockPair => blockPair != undefined)
-        )
+            if(eachBlock == bitToSlice) return [rowIndex, columnIndex]
+        })
+        .filter(blockAddrPair => blockAddrPair != undefined))
         .flat()
-    let blocks = new Array()
-    while(blockIndexPairs.length) {
-        const block = [blockIndexPairs.shift()]
+    let blockAddrSet = new Array()
+    while(blockAddrs.length) {
+        const block = [blockAddrs.shift()]
         for(const eachBlockPair of block) {
             const bolcksToRemove = []
-            blockIndexPairs.forEach(eachIndexPair => {
+            blockAddrs.forEach(eachIndexPair => {
                 if(areTwoBlocksAdjacent(eachBlockPair, eachIndexPair)) {
                     block.push(eachIndexPair)
                     bolcksToRemove.push(eachIndexPair)
                 }
             })
             bolcksToRemove.forEach(eachBlock => {
-                for(const index in blockIndexPairs) {
-                    if(blockIndexPairs[index][0] == eachBlock[0] && blockIndexPairs[index][1] == eachBlock[1]) {
-                        blockIndexPairs.splice(index, 1)
+                for(const index in blockAddrs) {
+                    if(blockAddrs[index][0] == eachBlock[0] && blockAddrs[index][1] == eachBlock[1]) {
+                        blockAddrs.splice(index, 1)
                         break
                     }
                 }
             })
         }
-        blocks.push(block)
+        blockAddrSet.push(block)
     }
-    console.log(blocks)
-    blocks.forEach(e => {
-        // console.log("be", e)
+    return blockAddrSet
+}
 
-        rotate(minimize(e, table.length), table.length)
+const areTwoBlocksAdjacent = (frontBlockPair, rearBlockPair) => {
+    return (frontBlockPair[0] + 1 == rearBlockPair[0] && frontBlockPair[1] == rearBlockPair[1])
+    || (frontBlockPair[0] - 1 == rearBlockPair[0] && frontBlockPair[1] == rearBlockPair[1])
+    || (frontBlockPair[0] == rearBlockPair[0] && frontBlockPair[1] + 1 == rearBlockPair[1])
+    || (frontBlockPair[0] == rearBlockPair[0] && frontBlockPair[1] - 1 == rearBlockPair[1])
+}
+
+const minimize = (blockAddrSet, tableLength) => {
+    let minRowValue = tableLength
+    let minColumnValue = tableLength
+    blockAddrSet.forEach(eachBlockPair => {
+        if(minRowValue > eachBlockPair[0]) minRowValue = eachBlockPair[0]
+        if(minColumnValue > eachBlockPair[1]) minColumnValue = eachBlockPair[1]
     })
-    return 'done'
+    return blockAddrSet.map(eachBlockPair => [eachBlockPair[0] - minRowValue, eachBlockPair[1] - minColumnValue])
+}
+
+const rotate = (blockAddrSet, tableLength) => {
+    return blockAddrSet
+        .sort((frontAddrPairs, rearAddrPairs) => frontAddrPairs.length - rearAddrPairs.length)
+        .map(blockAddrPairs => {
+            const rotatedBlockAddrPairSet = [blockAddrPairs]
+            while(rotatedBlockAddrPairSet.length < 4) {
+                rotatedBlockAddrPairSet.push(rotatedBlockAddrPairSet[rotatedBlockAddrPairSet.length -1]
+                                            .map(eachBlockPair => {
+                                                return [eachBlockPair[1], tableLength - eachBlockPair[0]]
+                                            }))
+            }
+            return rotatedBlockAddrPairSet
+                                        .map(eachBlockAddrPairs => eachBlockAddrPairs.sort((frontBlockPair, rearBlockPair) => 
+                                            (frontBlockPair[0] * 10 + frontBlockPair[1]) - (rearBlockPair[0] * 10 + rearBlockPair[1])
+                                        ))
+        })
+}
+
+const doesSetContainsBoard = (gameBoard, tableSet) => {
+    return tableSet.map(eachTable => eachTable.map(eachBlock => `${eachBlock[0]}${eachBlock[1]}`).join(""))
+    .includes(gameBoard.map(eachBlock => `${eachBlock[0]}${eachBlock[1]}`).join(""))
+}
+
+const solution = (game_board, table) => {
+    const slicedGameBoard = sliceBlock(game_board, 0)
+                                .sort((frontAddrPairs, rearAddrPairs) => frontAddrPairs.length - rearAddrPairs.length)
+                                .map(eachBlockAddrPairs => eachBlockAddrPairs.sort((frontBlockPair, rearBlockPair) => 
+                                            (frontBlockPair[0] * 10 + frontBlockPair[1]) - (rearBlockPair[0] * 10 + rearBlockPair[1])
+                                ))
+                                .map(eachSlicedBlock => minimize(eachSlicedBlock, table.length))
+                                
+    const slicedTableSet =  rotate(sliceBlock(table, 1), table.length)
+                                .map(eachSlicedTable => eachSlicedTable
+                                                            .map(eachSlicedBlock => minimize(eachSlicedBlock, table.length)))
+
+    let answer = 0
+    for(const eachSlicedGameBoard of slicedGameBoard) {
+        let doestMatch = false
+        let indexToRemove = -1
+        const eachGameBoardBlockLength = eachSlicedGameBoard.length
+        for(const eachSlicedTableSetIndex in slicedTableSet) {
+            const eachSlicedTableSet = slicedTableSet[eachSlicedTableSetIndex]
+            const eachSlicedTableSetLength = eachSlicedTableSet[0].length
+            if(eachGameBoardBlockLength != eachSlicedTableSetLength) continue
+            if(eachGameBoardBlockLength > eachSlicedTableSetLength) break
+            doestMatch = doesSetContainsBoard(eachSlicedGameBoard, eachSlicedTableSet)
+            if(doestMatch) {
+                answer += eachGameBoardBlockLength
+                indexToRemove = eachSlicedTableSetIndex
+                break
+            }
+            
+        }
+        if(doestMatch) slicedTableSet.splice(indexToRemove, 1)
+    }
+    return answer
 };
-
-/*
-[
-    [1,1,1],
-    [1,0,0],
-    [0,0,0]
-]
-*/
-[
-  [1, 0, 0, 1, 1, 0],
-  [1, 0, 1, 0, 1, 0],
-  [0, 1, 1, 0, 1, 1],
-  [0, 0, 1, 0, 0, 0],
-  [1, 1, 0, 1, 1, 0],
-  [0, 1, 0, 0, 0, 0],
-];
-
-/*
-const t = [1,2,3,4,5]
-t.splice(3, 1)
-console.log(t)
-*/
-
-[
-    [0,1],
-    [1,0]
-]
-
-
-
-console.log(
-  solution(
-    [
-      [1, 1, 0, 0, 1, 0],
-      [0, 0, 1, 0, 1, 0],
-      [0, 1, 1, 0, 0, 1],
-      [1, 1, 0, 1, 1, 1],
-      [1, 0, 0, 0, 1, 0],
-      [0, 1, 1, 1, 0, 0],
-    ],
-    [
-        [1,0,0,1,1,0],
-        [1,0,1,0,1,0],
-        [0,1,1,0,1,1],
-        [0,0,1,0,0,0],
-        [1,1,0,1,1,0],
-        [0,1,0,0,0,0]]
-  )
-);
