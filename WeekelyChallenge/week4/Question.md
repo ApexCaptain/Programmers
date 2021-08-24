@@ -49,11 +49,11 @@
 
 아래 사진은 `개발자 언어 선호도` 나타낸 표입니다.
 
-![tc1_preference](res/tc1_preference.PNG)
+![tc1_preference](res/tc1_preference.png)
 
 아래 사진은 개발자가 선호하는 언어의 `직업군 언어 점수`를 나타낸 표입니다.
 
-![tc1_score](res/tc1_score.PNG)
+![tc1_score](res/tc1_score.png)
 
 따라서 점수 총합이 41로 가장 높은 `"HARDWARE"`를 return 해야 합니다.
 
@@ -63,11 +63,11 @@
 
 아래 사진은 `개발자 언어 선호도` 나타낸 표입니다.
 
-![tc2_preference](res/tc2_preference.PNG)
+![tc2_preference](res/tc2_preference.png)
 
 아래 사진은 개발자가 선호하는 언어의 `직업군 언어 점수`를 나타낸 표입니다.
 
-![tc2_score](res/tc2_score.PNG)
+![tc2_score](res/tc2_score.png)
 
 점수 총합이 55로 가장 높은 직업군은 "SI" 와 "PORTAL"입니다.
 따라서 사전 순으로 먼저 오는 `"PORTAL"`을 return 해야 합니다.
