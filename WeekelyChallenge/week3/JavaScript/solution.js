@@ -1,3 +1,9 @@
+/**
+ * @param {Array<Array<number>>} table 
+ * @param {number} bitToSlice 
+ * 
+ * @returns {Array<Array<number>>}
+ */
 const sliceBlock = (table, bitToSlice) => {
     const blockAddrs = table
         .map((eachRow, rowIndex) => eachRow.map((eachBlock, columnIndex) => {
@@ -30,6 +36,12 @@ const sliceBlock = (table, bitToSlice) => {
     return blockAddrSet
 }
 
+/**
+ * @param {Array<Array<number>>} frontBlockPair 
+ * @param {Array<Array<number>>} rearBlockPair 
+ * 
+ * @returns {boolean}
+ */
 const areTwoBlocksAdjacent = (frontBlockPair, rearBlockPair) => {
     return (frontBlockPair[0] + 1 == rearBlockPair[0] && frontBlockPair[1] == rearBlockPair[1])
     || (frontBlockPair[0] - 1 == rearBlockPair[0] && frontBlockPair[1] == rearBlockPair[1])
@@ -37,6 +49,12 @@ const areTwoBlocksAdjacent = (frontBlockPair, rearBlockPair) => {
     || (frontBlockPair[0] == rearBlockPair[0] && frontBlockPair[1] - 1 == rearBlockPair[1])
 }
 
+/**
+ * @param {Array<Array<number>>} blockAddrSet 
+ * @param {number} tableLength 
+ * 
+ * @returns {Array<Array<number>>}
+ */
 const minimize = (blockAddrSet, tableLength) => {
     let minRowValue = tableLength
     let minColumnValue = tableLength
@@ -47,6 +65,12 @@ const minimize = (blockAddrSet, tableLength) => {
     return blockAddrSet.map(eachBlockPair => [eachBlockPair[0] - minRowValue, eachBlockPair[1] - minColumnValue])
 }
 
+/**
+ * @param {Array<Array<number>>} blockAddrSet 
+ * @param {number} tableLength
+ * 
+ * @returns {Array<Array<number>>}
+ */
 const rotate = (blockAddrSet, tableLength) => {
     return blockAddrSet
         .sort((frontAddrPairs, rearAddrPairs) => frontAddrPairs.length - rearAddrPairs.length)
@@ -65,11 +89,23 @@ const rotate = (blockAddrSet, tableLength) => {
         })
 }
 
+/**
+ * @param {Array<Array<number>>} gameBoard 
+ * @param {Array<Array<number>>} tableSet 
+ * 
+ * @returns {boolean}
+ */
 const doesSetContainsBoard = (gameBoard, tableSet) => {
     return tableSet.map(eachTable => eachTable.map(eachBlock => `${eachBlock[0]}${eachBlock[1]}`).join(""))
     .includes(gameBoard.map(eachBlock => `${eachBlock[0]}${eachBlock[1]}`).join(""))
 }
 
+/**
+ * @param {Array<Array<number>>} game_board 
+ * @param {Array<Array<number>>} table 
+ * 
+ * @returns {number}
+ */
 const solution = (game_board, table) => {
     const slicedGameBoard = sliceBlock(game_board, 0)
                                 .sort((frontAddrPairs, rearAddrPairs) => frontAddrPairs.length - rearAddrPairs.length)
@@ -104,3 +140,5 @@ const solution = (game_board, table) => {
     }
     return answer
 };
+
+module.exports = solution

@@ -1,4 +1,9 @@
-function solution(scores) {
+/**
+ * @param {Array<Array<number>>} scores 
+ * 
+ * @returns {string}
+ */
+const solution = (scores) => {
     const students = new Array(scores.length)
     scores.forEach((values, grader) => {
         values.forEach((score, student) => {
@@ -47,9 +52,4 @@ function solution(scores) {
     }).join("")
 }
 
-const r = solution(
-    [[70,49,90],
-    [68,50,38],
-    [73,31,100]]
-)
-console.log(r)
+module.exports = solution

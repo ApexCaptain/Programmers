@@ -10,9 +10,10 @@ class LanguageScore {
         this.score = score
     }
 }
+
 class JobGroup {
+    asd
     /**
-     * 
      * @param {string} name 
      * @param {Array<LanguageScore>} languageScores 
      */
@@ -21,6 +22,9 @@ class JobGroup {
         this.languageScores = languageScores
     }
     
+    /**
+     * @returns {number}
+     */
     getSum() {
         return this.languageScores
             .reduce(
@@ -33,6 +37,8 @@ class JobGroup {
  * @param {Array<string>} table 
  * @param {Array<string>} languages 
  * @param {Array<number>} prefernce 
+ * 
+ * @returns {string}
  */
 const solution = (table, languages, prefernce) => table
         .map(eachTableString => eachTableString.split(" "))
@@ -44,15 +50,19 @@ const solution = (table, languages, prefernce) => table
         .map(eachJobGroup => {
             for(let eachPrefIndex in languages) {
                 const foundLanguageScore = eachJobGroup.languageScores.find(eachLanguageScore => eachLanguageScore.name == languages[eachPrefIndex])
-                if(foundLanguageScore) foundLanguageScore.score *= prefernce[eachPrefIndex]
+                if(foundLanguageScore) {
+                    foundLanguageScore.score *= prefernce[eachPrefIndex]
+                    break
+                }
             }
             return eachJobGroup
         })
         .sort((frontGroup, rearGroup) => {
             const sumDiff = rearGroup.getSum() - frontGroup.getSum()
-            return sumDiff == 0 ? 
-                frontGroup.name  < rearGroup.name ? -1
-                : 1
+            return sumDiff == 0 
+                ? frontGroup.name  < rearGroup.name 
+                    ? -1
+                    : 1
                 : sumDiff
         })[0].name
     
