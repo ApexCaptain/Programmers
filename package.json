@@ -2,7 +2,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test:hash" : "mocha -r ts-node/register ./src/Hash/**/.spec.ts"
+    "test:level1" : "mocha -r ts-node/register ./src/Level1/**/.spec.ts",
+    "test:level2" : "mocha -r ts-node/register ./src/Level2/**/.spec.ts",
+    "test:level3" : "mocha -r ts-node/register ./src/Level3/**/.spec.ts"
   },
   "devDependencies": {
     "@types/chai": "4.2.22",
