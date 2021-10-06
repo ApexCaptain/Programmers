@@ -1,14 +1,15 @@
 {
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "test:level1" : "mocha -r ts-node/register ./src/Level1/**/.spec.ts",
-    "test:level2" : "mocha -r ts-node/register ./src/Level2/**/.spec.ts",
-    "test:level3" : "mocha -r ts-node/register ./src/Level3/**/.spec.ts"
+    "start": "cfs -s ./flossScript.js",
+    "test": "cfs -s ./flossScript.js ts.test.byNumber",
+    "test@level1" : "mocha -r ts-node/register ./src/Level1/**/.spec.ts"
   },
   "devDependencies": {
+    "@apexcaptain/candyfloss": "1.0.1",
     "@types/chai": "4.2.22",
     "@types/mocha": "9.0.0",
+    "@types/node": "16.10.1",
     "chai": "4.3.4",
     "mocha": "9.1.1",
     "ts-node": "10.2.1",
