@@ -21,7 +21,11 @@ class TowerNode {
         node = this.findNode(currentWire[1]);
         useShift = true;
       }
-      node!.children.push(
+      if (!node) {
+        copiedWires.push(currentWire);
+        continue;
+      }
+      node.children.push(
         new TowerNode(useShift ? currentWire[0] : currentWire[1])
       );
     }
@@ -41,16 +45,11 @@ class TowerNode {
   }
 }
 
-// [[1,3],[2,3],[3,4],[4,5],[4,6],[4,7],[7,8],[7,9]]
 export const solution = (n: number, wires: Array<[number, number]>): number =>
   wires
     .map(
       function (this: TowerNode, eachWire: [number, number]) {
         return Math.abs(n - 2 * this.countExcept(eachWire));
-      }.bind(
-        new TowerNode(1).connectWires(
-          wires.sort((front, rear) => front[0] - rear[0])
-        )
-      )
+      }.bind(new TowerNode(1).connectWires(wires))
     )
     .sort()[0];

@@ -43,4 +43,15 @@ describe("전력망을 둘로 나누기", () => {
   it("Case 4", () => {
     expect(solution(2, [[1, 2]])).to.be.eqls(0);
   });
+
+  it("Case 5", () => {
+    expect(
+      solution(5, [
+        [1, 3],
+        [2, 4],
+        [3, 5],
+        [4, 5],
+      ])
+    ).to.be.eqls(1);
+  });
 });
